@@ -53,28 +53,28 @@ export const STEPS = [
         label: "Diriez-vous que le vol de biens (téléphones, motos, voitures) est un problème fréquent là où vous vivez ?",
         options: [["yes", "Oui"], ["no", "Non"]],
       },
-      {
-        name: "heaviest_impact", type: "single", showIf: ["victim", ["self", "close_one"]],
-        label: "Quel a été l'impact le plus lourd pour vous ou votre proche ?",
-        options: [
-          ["financial", "Financier (perte d'argent)"],
-          ["psychological", "Moral ou psychologique"],
-          ["work", "Professionnel (travail, revenus)"],
-          ["data", "Perte de données ou de documents"],
-          ["other", "Autre"],
-        ],
-      },
+      // {
+      //   name: "heaviest_impact", type: "single", showIf: ["victim", ["self", "close_one"]],
+      //   label: "Quel a été l'impact le plus lourd pour vous ou votre proche ?",
+      //   options: [
+      //     ["financial", "Financier (perte d'argent)"],
+      //     ["psychological", "Moral ou psychologique"],
+      //     ["work", "Professionnel (travail, revenus)"],
+      //     ["data", "Perte de données ou de documents"],
+      //     ["other", "Autre"],
+      //   ],
+      // },
       {
         name: "keep_informed", type: "single",
         label: "Souhaitez-vous être tenu informé des résultats de ce sondage et des suites données ?",
         options: [["yes", "Oui"], ["no", "Non"]],
       },
-      {
-        name: "contact", type: "short", optional: true, autoComplete: "email", showIf: ["keep_informed", "yes"],
-        label: "Votre numéro WhatsApp ou e-mail",
-        hint: "Pour vous envoyer les résultats et vous ajouter au canal WhatsApp dédié à la cause.",
-        placeholder: "+225 07 00 00 00 00 ou e-mail",
-      },
+      // {
+      //   name: "contact", type: "short", optional: true, autoComplete: "email", showIf: ["keep_informed", "yes"],
+      //   label: "Votre numéro WhatsApp ou e-mail",
+      //   hint: "Pour vous envoyer les résultats et vous ajouter au canal WhatsApp dédié à la cause.",
+      //   placeholder: "+225 07 00 00 00 00 ou e-mail",
+      // },
     ],
   },
 ];
