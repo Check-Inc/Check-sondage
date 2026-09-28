@@ -19,7 +19,9 @@ function buildPayload(id, answers) {
 }
 
 function isVisible(q, answers) {
-  return !q.showIf || answers[q.showIf[0]] === q.showIf[1];
+  if (!q.showIf) return true;
+  const [name, value] = q.showIf;
+  return Array.isArray(value) ? value.includes(answers[name]) : answers[name] === value;
 }
 
 /* Partie (étape de questions.js) à laquelle appartient une question */
@@ -122,7 +124,7 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
 
             <div className="wizard-body">
               <div className={`step ${dir}`} key={q.name}>
-                <Question q={q} value={answers[q.name]} onChange={answer} />
+                <Question q={q} number={index + 1} total={questions.length} value={answers[q.name]} onChange={answer} />
               </div>
             </div>
 

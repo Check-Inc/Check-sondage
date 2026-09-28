@@ -2,7 +2,8 @@
    Contenu du sondage : étapes et questions.
    Types : "single" (choix unique), "multi" (choix multiples),
            "scale" (échelle 1–5, avec `ends`), "short" / "long" (texte libre).
-   `showIf: [name, value]` affiche la question seulement si la réponse `name` vaut `value`.
+   `showIf: [name, value]` affiche la question seulement si la réponse `name` vaut `value`
+   (ou l'une des valeurs, si `value` est un tableau).
 ----------------------------------------------------------------- */
 export const STEPS = [
   {
@@ -12,13 +13,13 @@ export const STEPS = [
     questions: [
       {
         name: "victim", type: "single",
-        label: "Avez-vous déjà été victime du vol ou de la perte d'un bien (téléphone, ordinateur, moto, voiture) ?",
+        label: "Avez-vous déjà été victime du vol ou de la perte d'un bien (téléphone, ordinateur, moto, voiture, terrain) ?",
         options: [["self", "Oui, moi-même"], ["close_one", "Oui, un proche"], ["never", "Non, jamais"]],
       },
       {
         name: "asset_type", type: "single",
         label: "Si oui, de quel type de bien s'agissait-il ?",
-        options: [["phone", "Téléphone"], ["computer", "Ordinateur"], ["moto", "Moto"], ["car", "Voiture"], ["other", "Autre"]],
+        options: [["phone", "Téléphone"], ["computer", "Ordinateur"], ["moto", "Moto"], ["car", "Voiture"], ["land", "Terrain"], ["other", "Autre"]],
       },
       {
         name: "action_taken", type: "single",
@@ -28,7 +29,7 @@ export const STEPS = [
       {
         name: "bought_used", type: "single",
         label: "Avez-vous déjà acheté un bien d'occasion (téléphone, ordinateur, moto, voiture) ?",
-        options: [["often", "Oui, souvent"], ["once_or_twice", "Oui, une ou deux fois"], ["never", "Jamais"]],
+        options: [["always", "Oui, toujours"], ["often", "Oui, souvent"], ["once_or_twice", "Oui, une ou deux fois"], ["never", "Jamais"]],
       },
     ],
   },
@@ -48,9 +49,30 @@ export const STEPS = [
         options: [["certainly", "Certainement"], ["probably", "Probablement"], ["unlikely", "Peu probable"], ["no", "Non"]],
       },
       {
-        name: "contact", type: "short", optional: true, autoComplete: "email",
+        name: "theft_frequent", type: "single",
+        label: "Diriez-vous que le vol de biens (téléphones, motos, voitures) est un problème fréquent là où vous vivez ?",
+        options: [["yes", "Oui"], ["no", "Non"]],
+      },
+      {
+        name: "heaviest_impact", type: "single", showIf: ["victim", ["self", "close_one"]],
+        label: "Quel a été l'impact le plus lourd pour vous ou votre proche ?",
+        options: [
+          ["financial", "Financier (perte d'argent)"],
+          ["psychological", "Moral ou psychologique"],
+          ["work", "Professionnel (travail, revenus)"],
+          ["data", "Perte de données ou de documents"],
+          ["other", "Autre"],
+        ],
+      },
+      {
+        name: "keep_informed", type: "single",
+        label: "Souhaitez-vous être tenu informé des résultats de ce sondage et des suites données ?",
+        options: [["yes", "Oui"], ["no", "Non"]],
+      },
+      {
+        name: "contact", type: "short", optional: true, autoComplete: "email", showIf: ["keep_informed", "yes"],
         label: "Votre numéro WhatsApp ou e-mail",
-        hint: "Pour être tenu informé des résultats de ce sondage et rejoindre le canal WhatsApp dédié à la cause.",
+        hint: "Pour vous envoyer les résultats et vous ajouter au canal WhatsApp dédié à la cause.",
         placeholder: "+225 07 00 00 00 00 ou e-mail",
       },
     ],

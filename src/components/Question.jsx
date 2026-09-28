@@ -1,5 +1,3 @@
-import { TOTAL } from "../data/questions.js";
-
 const pad = (n) => String(n).padStart(2, "0");
 const SCALE = ["1", "2", "3", "4", "5"];
 
@@ -9,7 +7,8 @@ export function isAnswered(q, value) {
 }
 
 /* Une question : titre numéroté + champ adapté à son type */
-export default function Question({ q, value, onChange }) {
+/* `number` / `total` : position parmi les questions affichées (certaines sont conditionnelles) */
+export default function Question({ q, number, total, value, onChange }) {
   const id = `q${q.n}`;
   const hintId = q.hint ? `${id}-hint` : undefined;
   const legendId = q.type === "scale" ? `${id}-legend` : undefined;
@@ -17,9 +16,9 @@ export default function Question({ q, value, onChange }) {
 
   const head = (
     <>
-      <span className="q-no" aria-hidden="true">{pad(q.n)}</span>
+      <span className="q-no" aria-hidden="true">{pad(number)}</span>
       <span>
-        <span className="sr-only">Question {q.n} sur {TOTAL} : </span>
+        <span className="sr-only">Question {number} sur {total} : </span>
         {q.label}
         {q.optional && <> <span className="q-opt">Facultatif</span></>}
       </span>
