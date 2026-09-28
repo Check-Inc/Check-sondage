@@ -338,6 +338,10 @@ textarea.field{ min-height:68px; height:68px; }
 .thanks .btn-primary{ background:linear-gradient(135deg,#B91C1C,#991B1B); border-color:transparent; box-shadow:0 12px 22px -10px rgba(185,28,28,.75); }
 .thanks .btn-primary:hover{ background:linear-gradient(135deg,#991B1B,#7F1D1D); border-color:transparent; }
 .thanks .btn-secondary:hover:not(:disabled){ border-color:var(--brand-strong); color:var(--brand-strong); }
+/* « Nous rejoindre » : vert WhatsApp, reconnaissable d'un coup d'œil */
+.btn-whatsapp{ background:#1B8A47; color:#fff; border-color:#1B8A47; box-shadow:0 12px 22px -10px rgba(27,138,71,.7); } /* vert WhatsApp foncé : texte blanc lisible */
+.btn-whatsapp:hover{ background:#157038; border-color:#157038; }
+.btn-whatsapp svg{ width:20px; height:20px; }
 @media (max-width:479px){
   .thanks-actions{ flex-direction:column-reverse; } /* « Partager » en premier, sous le pouce */
   .thanks-actions .btn{ width:100%; }
