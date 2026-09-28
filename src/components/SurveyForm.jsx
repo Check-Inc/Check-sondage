@@ -6,12 +6,14 @@ import Question from "./Question.jsx";
 const makeId = () =>
   "rsp_" + (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, "") : Date.now().toString(36) + Math.random().toString(36).slice(2));
 
-/* Réponses → objet envoyé à l'API (texte vide = null, choix multiples = tableau) */
+/* Réponses → objet envoyé à l'API (texte vide = null, choix multiples = tableau).
+   Une question masquée vaut null : une ancienne réponse devenue invisible n'est pas envoyée. */
 function buildPayload(id, answers) {
   const data = { id, submitted_at: new Date().toISOString() };
   ALL_QUESTIONS.forEach((q) => {
     const v = answers[q.name];
-    if (q.type === "multi") data[q.name] = Array.isArray(v) ? v : [];
+    if (!isVisible(q, answers)) data[q.name] = null;
+    else if (q.type === "multi") data[q.name] = Array.isArray(v) ? v : [];
     else if (q.type === "scale") data[q.name] = v ? Number(v) : null;
     else data[q.name] = typeof v === "string" && v.trim() !== "" ? v.trim() : null;
   });
@@ -72,10 +74,14 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
       if (SUBMIT_URL) {
         const r = await fetch(SUBMIT_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json", "Idempotency-Key": data.id },
+          headers: { "Content-Type": "application/json", Accept: "application/json", "Idempotency-Key": data.id },
           body: JSON.stringify(data),
         });
-        if (!r.ok) throw new Error("HTTP " + r.status);
+        // 201 = enregistrée, 200 = déjà enregistrée à l'identique.
+        // 409 = cet id est déjà enregistré avec d'autres réponses : un premier envoi est arrivé au serveur
+        // alors que le navigateur a vu une erreur, puis les réponses ont été modifiées avant de réessayer.
+        // La participation est donc bien enregistrée : 409 est volontairement traité comme un succès.
+        if (!r.ok && r.status !== 409) throw new Error("HTTP " + r.status);
       } else {
         console.info("[sondage] payload", data);
         await new Promise((res) => setTimeout(res, 400));
