@@ -54,9 +54,11 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
   };
 
   // Choix unique : on passe automatiquement à la question suivante
+  // (calculée avec la nouvelle réponse, qui peut faire apparaître une question)
   const answer = (v) => {
     onAnswer(q.name, v);
-    if (q.type === "single" && !last) {
+    const next = ALL_QUESTIONS.filter((x) => isVisible(x, { ...answers, [q.name]: v }));
+    if (q.type === "single" && index < next.length - 1) {
       clearTimeout(advanceTimer.current);
       advanceTimer.current = setTimeout(() => go(index + 1), 350);
     }
