@@ -30,6 +30,13 @@
 }
 @media (min-width:768px){ :root{ --gutter:var(--space-8); } }
 
+/* Plus Jakarta Sans 800 en version statique (fichier officiel Tokotype, licence OFL) :
+   la version variable de Google Fonts a des contours superposés, visibles en texte détouré (N, R, M). */
+@font-face{
+  font-family:"Plus Jakarta Sans Static"; font-weight:800; font-style:normal; font-display:swap;
+  src:url("/fonts/PlusJakartaSans-ExtraBold.woff2") format("woff2");
+}
+
 *,*::before,*::after{ box-sizing:border-box; }
 html{ -webkit-text-size-adjust:100%; overflow-x:clip; } /* rien ne doit élargir la page sur mobile */
 body{
@@ -88,6 +95,7 @@ h1,h2,h3,legend,button{ font-family:var(--font-display); }
 .hero-title .line{ display:block; }
 /* « c'est un crime » en contour fin (le point carré garde la couleur via currentColor) */
 .hero-title .line + .line{
+  font-family:"Plus Jakarta Sans Static", var(--font-display);
   color:#FECACA; -webkit-text-fill-color:transparent; -webkit-text-stroke:.022em #FECACA;
   text-shadow:none; filter:drop-shadow(0 4px 14px rgba(69,10,10,.6));
 }
