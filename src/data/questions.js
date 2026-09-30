@@ -7,13 +7,18 @@
 ----------------------------------------------------------------- */
 export const STEPS = [
   {
-    title: "Les faits et vos démarches",
+    title: "Expérience face au vol et à la perte de biens",
     short: "Les faits",
     icon: "document",
     questions: [
       {
+        name: "theft_frequent", type: "single",
+        label: "Le vol de biens est-il fréquent là où vous vivez ?",
+        options: [["yes", "Oui"], ["no", "Non"]],
+      },
+      {
         name: "victim", type: "single",
-        label: "Avez-vous déjà été victime du vol ou de la perte d'un bien (téléphone, ordinateur, moto, voiture, terrain) ?",
+        label: "Et vous, avez-vous déjà été victime du vol ou de la perte d'un bien (téléphone, ordinateur, moto, voiture, terrain) ?",
         options: [["self", "Oui, moi-même"], ["close_one", "Oui, un proche"], ["never", "Non, jamais"]],
       },
       {
@@ -23,35 +28,35 @@ export const STEPS = [
       },
       {
         name: "action_taken", type: "single",
-        label: "Qu'avez-vous fait après les faits ?",
+        label: "Suite à cela, qu'avez-vous fait ?",
         options: [["police", "Déclaration à la police"], ["own_means", "Recherche par mes propres moyens"], ["nothing", "Rien, je n'ai pas su quoi faire"], ["other", "Autre"]],
-      },
-      {
-        name: "bought_used", type: "single",
-        label: "Avez-vous déjà acheté un bien d'occasion (téléphone, ordinateur, moto, voiture) ?",
-        options: [["always", "Oui, toujours"], ["often", "Oui, souvent"], ["once_or_twice", "Oui, une ou deux fois"], ["never", "Jamais"]],
       },
     ],
   },
   {
-    title: "Vérification et suite",
+    title: "Vérification de la provenance des biens",
     short: "Vérification",
     icon: "search",
     questions: [
       {
+        name: "bought_used", type: "single",
+        label: "Par ailleurs, avez-vous déjà acheté un bien d'occasion (téléphone, ordinateur, moto, voiture) ?",
+        options: [["always", "Oui, toujours"], ["often", "Oui, souvent"], ["once_or_twice", "Oui, une ou deux fois"], ["never", "Jamais"]],
+      },
+      {
+        name: "doubted_origin", type: "single",
+        label: "Lors de cet achat, avez-vous déjà eu un doute sur la provenance du bien ?",
+        options: [["yes", "Oui"], ["no", "Non"]],
+      },
+      {
         name: "had_verification_means", type: "single",
-        label: "Aviez-vous un moyen simple de vérifier ce doute au moment de l'achat ?",
+        label: "Si oui, aviez-vous un moyen simple de vérifier ce doute ?",
         options: [["yes", "Oui"], ["no", "Non"], ["did_not_know", "Je ne savais pas que c'était possible"]],
       },
       {
         name: "would_use_verification", type: "single",
-        label: "Si un moyen simple existait pour vérifier l'origine d'un bien avant de l'acheter (en quelques secondes, avec juste un numéro de série ou une plaque), l'utiliseriez-vous ?",
+        label: "Dans ce cas, s'il existait un moyen simple de vérifier l'origine d'un bien d'occasion, l'utiliseriez-vous ?",
         options: [["certainly", "Certainement"], ["probably", "Probablement"], ["unlikely", "Peu probable"], ["no", "Non"]],
-      },
-      {
-        name: "theft_frequent", type: "single",
-        label: "Diriez-vous que le vol de biens (téléphones, motos, voitures) est un problème fréquent là où vous vivez ?",
-        options: [["yes", "Oui"], ["no", "Non"]],
       },
       // {
       //   name: "heaviest_impact", type: "single", showIf: ["victim", ["self", "close_one"]],
@@ -66,7 +71,7 @@ export const STEPS = [
       // },
       {
         name: "keep_informed", type: "single",
-        label: "Souhaitez-vous être tenu informé des résultats de ce sondage et des suites données ?",
+        label: "Enfin, souhaitez-vous être tenu informé des résultats de ce sondage ?",
         options: [["yes", "Oui"], ["no", "Non"]],
       },
       // {
