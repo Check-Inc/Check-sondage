@@ -87,10 +87,12 @@ h1,h2,h3,legend,button{ font-family:var(--font-display); }
 }
 .hero-title .line{ display:block; }
 /* « c'est un crime » en contour fin (le point carré garde la couleur via currentColor) */
-.hero-title .line + .line{
-  color:#FECACA; -webkit-text-fill-color:transparent; -webkit-text-stroke:.022em #FECACA;
-  text-shadow:none; filter:drop-shadow(0 4px 14px rgba(69,10,10,.6));
-}
+.hero-title .line + .line{ color:#FECACA; text-shadow:none; }
+/* contour via filtre SVG (Hero.jsx) plutôt que -webkit-text-stroke ; épaisseur ≈ .022em du titre */
+.hero-title .outline{ --outline:url(#hero-outline-1); filter:var(--outline) drop-shadow(0 4px 14px rgba(69,10,10,.6)); }
+@media (min-width:700px){ .hero-title .outline{ --outline:url(#hero-outline-2); } }
+@media (min-width:1100px){ .hero-title .outline{ --outline:url(#hero-outline-3); } }
+@media (min-width:1450px){ .hero-title .outline{ --outline:url(#hero-outline-4); } }
 /* le point final : un carré plein, qui tombe puis bat doucement */
 .hero-title .dot{
   display:inline-block; width:.3em; height:.3em; margin-left:.14em;
