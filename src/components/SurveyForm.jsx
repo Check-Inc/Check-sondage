@@ -16,6 +16,11 @@ function buildPayload(id, answers) {
     else if (q.type === "multi") data[q.name] = Array.isArray(v) ? v : [];
     else if (q.type === "scale") data[q.name] = v ? Number(v) : null;
     else data[q.name] = typeof v === "string" && v.trim() !== "" ? v.trim() : null;
+    if (q.followUp) {
+      const f = answers[q.followUp.name];
+      const shown = isVisible(q, answers) && v === q.followUp.showIf;
+      data[q.followUp.name] = shown && typeof f === "string" && f.trim() !== "" ? f.trim() : null;
+    }
   });
   return data;
 }
@@ -132,7 +137,10 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
 
             <div className="wizard-body">
               <div className={`step ${dir}`} key={q.name}>
-                <Question q={q} number={index + 1} total={questions.length} value={answers[q.name]} onChange={answer} />
+                <Question q={q} number={index + 1} total={questions.length} value={answers[q.name]} onChange={answer}
+                  followUpValue={q.followUp && answers[q.followUp.name]}
+                  onFollowUpChange={(v) => onAnswer(q.followUp.name, v)}
+                />
               </div>
             </div>
 

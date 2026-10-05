@@ -4,6 +4,8 @@
            "scale" (échelle 1–5, avec `ends`), "short" / "long" (texte libre).
    `showIf: [name, value]` affiche la question seulement si la réponse `name` vaut `value`
    (ou l'une des valeurs, si `value` est un tableau).
+   `followUp: { name, showIf, … }` ajoute un champ texte sous une question à choix unique,
+   affiché seulement quand la réponse vaut `showIf` ; il est envoyé sous son propre `name`.
 ----------------------------------------------------------------- */
 export const STEPS = [
   {
@@ -22,8 +24,9 @@ export const STEPS = [
         options: [["self", "Oui, moi-même"], ["close_one", "Oui, un proche"], ["never", "Non, jamais"]],
       },
       {
-        name: "asset_type", type: "single",
+        name: "asset_type", type: "multi",
         label: "Si oui, de quel type de bien s'agissait-il ?",
+        hint: "Plusieurs réponses possibles.",
         options: [["phone", "Téléphone"], ["computer", "Ordinateur"], ["moto", "Moto"], ["car", "Voiture"], ["land", "Terrain"], ["other", "Autre"]],
       },
       {
@@ -73,6 +76,12 @@ export const STEPS = [
         name: "keep_informed", type: "single",
         label: "Enfin, souhaitez-vous être tenu informé des résultats de ce sondage ?",
         options: [["yes", "Oui"], ["no", "Non"]],
+      },
+      {
+        name: "share_phone", type: "single",
+        label: "Souhaitez-vous nous laisser votre numéro de téléphone ?",
+        options: [["yes", "Oui"], ["no", "Non"]],
+        followUp: { name: "phone", showIf: "yes", label: "Votre numéro de téléphone", inputType: "tel", autoComplete: "tel", placeholder: "+225 07 00 00 00 00" },
       },
       // {
       //   name: "contact", type: "short", optional: true, autoComplete: "email", showIf: ["keep_informed", "yes"],

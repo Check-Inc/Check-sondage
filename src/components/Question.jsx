@@ -8,7 +8,7 @@ export function isAnswered(q, value) {
 
 /* Une question : titre numéroté + champ adapté à son type */
 /* `number` / `total` : position parmi les questions affichées (certaines sont conditionnelles) */
-export default function Question({ q, number, total, value, onChange }) {
+export default function Question({ q, number, total, value, onChange, followUpValue, onFollowUpChange }) {
   const id = `q${q.n}`;
   const hintId = q.hint ? `${id}-hint` : undefined;
   const legendId = q.type === "scale" ? `${id}-legend` : undefined;
@@ -85,6 +85,21 @@ export default function Question({ q, number, total, value, onChange }) {
         </>
       ) : (
         <div className="opts">{items}</div>
+      )}
+      {q.followUp && value === q.followUp.showIf && (
+        <div className="q-follow">
+          <label htmlFor={`${id}-follow`}>{q.followUp.label}</label>
+          <input
+            className="field"
+            id={`${id}-follow`}
+            name={q.followUp.name}
+            type={q.followUp.inputType || "text"}
+            placeholder={q.followUp.placeholder}
+            autoComplete={q.followUp.autoComplete}
+            value={followUpValue || ""}
+            onChange={(e) => onFollowUpChange(e.target.value)}
+          />
+        </div>
       )}
     </fieldset>
   );
