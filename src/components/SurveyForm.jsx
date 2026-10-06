@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { ALL_QUESTIONS, STEPS } from "../data/questions.js";
+import { ALL_QUESTIONS } from "../data/questions.js";
+import { dialOf, guessCountry, locateCountry } from "../data/countries.js";
 import { SUBMIT_URL } from "../config.js";
 import Question from "./Question.jsx";
+
+const countryKey = (q) => `${q.followUp.name}_country`;
 
 const makeId = () =>
   "rsp_" + (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, "") : Date.now().toString(36) + Math.random().toString(36).slice(2));
 
 /* Réponses → objet envoyé à l'API (texte vide = null, choix multiples = tableau).
    Une question masquée vaut null : une ancienne réponse devenue invisible n'est pas envoyée. */
-function buildPayload(id, answers) {
+function buildPayload(id, answers, detectedCountry) {
   const data = { id, submitted_at: new Date().toISOString() };
   ALL_QUESTIONS.forEach((q) => {
     const v = answers[q.name];
@@ -19,7 +22,9 @@ function buildPayload(id, answers) {
     if (q.followUp) {
       const f = answers[q.followUp.name];
       const shown = isVisible(q, answers) && v === q.followUp.showIf;
-      data[q.followUp.name] = shown && typeof f === "string" && f.trim() !== "" ? f.trim() : null;
+      const text = shown && typeof f === "string" && f.trim() !== "" ? f.trim() : null;
+      const dial = dialOf(answers[countryKey(q)] || detectedCountry);
+      data[q.followUp.name] = text && q.followUp.type === "phone" ? `${dial} ${text}` : text;
     }
   });
   return data;
@@ -31,13 +36,12 @@ function isVisible(q, answers) {
   return Array.isArray(value) ? value.includes(answers[name]) : answers[name] === value;
 }
 
-/* Partie (étape de questions.js) à laquelle appartient une question */
-const partOf = (q) => STEPS.find((s) => s.questions.includes(q));
-
 export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
   const [current, setCurrent] = useState(0);
   const [dir, setDir] = useState("from-right");
   const [sending, setSending] = useState(false);
+  // Pays présélectionné dans le champ téléphone : estimation immédiate, remplacée par le pays réel dès qu'il est connu
+  const [detectedCountry, setDetectedCountry] = useState(guessCountry);
   const submissionId = useRef(makeId()); // identifiant stable : évite les doublons en cas de double clic
   const titleRef = useRef(null);
   const advanceTimer = useRef(null);
@@ -53,6 +57,12 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
   }, [index]);
 
   useEffect(() => () => clearTimeout(advanceTimer.current), []);
+
+  useEffect(() => {
+    let active = true;
+    locateCountry().then((code) => { if (active && code) setDetectedCountry(code); });
+    return () => { active = false; };
+  }, []);
 
   const go = (i) => {
     clearTimeout(advanceTimer.current);
@@ -74,7 +84,7 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
   const submit = async () => {
     if (sending) return;
     setSending(true);
-    const data = buildPayload(submissionId.current, answers);
+    const data = buildPayload(submissionId.current, answers, detectedCountry);
     try {
       if (SUBMIT_URL) {
         const r = await fetch(SUBMIT_URL, {
@@ -120,7 +130,6 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
             <header className="wizard-head">
               <div className="wizard-kicker">
                 <span className="kicker-step">Question {index + 1} sur {questions.length}</span>
-                <span className="kicker-count">{partOf(q).short}</span>
               </div>
               <div
                 className="progress"
@@ -140,6 +149,8 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
                 <Question q={q} number={index + 1} total={questions.length} value={answers[q.name]} onChange={answer}
                   followUpValue={q.followUp && answers[q.followUp.name]}
                   onFollowUpChange={(v) => onAnswer(q.followUp.name, v)}
+                  country={q.followUp && (answers[countryKey(q)] || detectedCountry)}
+                  onCountryChange={(v) => onAnswer(countryKey(q), v)}
                 />
               </div>
             </div>
@@ -152,7 +163,7 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
                 {sending ? "Envoi…" : <>{last ? "Envoyer" : "Suivant"} <span className="arrow" aria-hidden="true">→</span></>}
               </button>
             </footer>
-            <p className="nav-note"><strong>Réponses anonymes.</strong> Seul un contact facultatif est demandé à la fin.</p>
+            {index === 0 && <p className="nav-note"><strong>Réponses anonymes.</strong> Seul un contact facultatif est demandé à la fin.</p>}
           </form>
         </div>
       </section>

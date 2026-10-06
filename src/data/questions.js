@@ -6,6 +6,8 @@
    (ou l'une des valeurs, si `value` est un tableau).
    `followUp: { name, showIf, … }` ajoute un champ texte sous une question à choix unique,
    affiché seulement quand la réponse vaut `showIf` ; il est envoyé sous son propre `name`.
+   Avec `type: "phone"`, le champ est précédé d'un choix d'indicatif (data/countries.js)
+   et la valeur envoyée est « indicatif + numéro ».
 ----------------------------------------------------------------- */
 export const STEPS = [
   {
@@ -76,12 +78,7 @@ export const STEPS = [
         name: "keep_informed", type: "single",
         label: "Enfin, souhaitez-vous être tenu informé des résultats de ce sondage ?",
         options: [["yes", "Oui"], ["no", "Non"]],
-      },
-      {
-        name: "share_phone", type: "single",
-        label: "Souhaitez-vous nous laisser votre numéro de téléphone ?",
-        options: [["yes", "Oui"], ["no", "Non"]],
-        followUp: { name: "contact", showIf: "yes", label: "Votre numéro de téléphone", inputType: "tel", autoComplete: "tel", placeholder: "+225 07 00 00 00 00" },
+        followUp: { name: "contact", showIf: "yes", type: "phone", label: "Votre numéro de téléphone", placeholder: "XX XX XX XX XX" },
       },
       // {
       //   name: "contact", type: "short", optional: true, autoComplete: "email", showIf: ["keep_informed", "yes"],

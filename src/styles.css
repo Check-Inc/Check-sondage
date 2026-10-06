@@ -88,15 +88,14 @@ h1,h2,h3,legend,button{ font-family:var(--font-display); }
 .hero-title .line{ display:block; }
 /* « c'est un crime » en contour fin (le point carré garde la couleur via currentColor) */
 .hero-title .line + .line{ color:#FECACA; text-shadow:none; }
-/* « c'est un crime » en lettres creuses : remplissage transparent +
-   text-stroke coloré. paint-order:stroke fill masque les tracés internes
-   (N, M, R) là où il est supporté (Chrome) ; ailleurs le trait centré
-   reste lisible. Fonctionne sur Safari iOS, qui rend à peine les filtres
-   SVG url(). */
+/* « c'est un crime » en lettres creuses : remplissage transparent + text-stroke coloré.
+   La ligne est en Poppins et non en Plus Jakarta Sans : dans cette dernière, les tracés de
+   N, M et R se croisent à l'intérieur de la lettre et tout contour les fait apparaître.
+   Un simple text-stroke rend pareil partout, y compris Safari iOS (qui rend mal les filtres SVG). */
 .hero-title .outline{
+  font-family:"Poppins", var(--font-display);
   color:transparent;
   -webkit-text-stroke:1.2px #FECACA;
-  paint-order:stroke fill;
   filter:drop-shadow(0 4px 14px rgba(69,10,10,.6));
 }
 /* Sans -webkit-text-stroke (vieux navigateurs) : texte plein — lisible. */
@@ -198,7 +197,6 @@ h1,h2,h3,legend,button{ font-family:var(--font-display); }
 @media (min-width:640px){ .wizard-head{ padding:24px 32px 0; } }
 .wizard-kicker{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; margin:0; font:700 10.5px/1 var(--font-display); letter-spacing:.12em; text-transform:uppercase; }
 .kicker-step{ background:var(--brand-strong); color:#fff; padding:5px 10px; }
-.kicker-count{ color:var(--ink-muted); }
 .progress{ height:4px; margin-top:14px; background:#F3D4D4; overflow:hidden; }
 .progress span{ display:block; height:100%; background:var(--brand); transition:width .4s cubic-bezier(.2,.7,.2,1); }
 .wizard-head h2:focus{ outline:none; }
@@ -244,6 +242,10 @@ h1,h2,h3,legend,button{ font-family:var(--font-display); }
 .q-follow{ margin-top:14px; animation:chkIn .4s ease both; }
 .q-follow label{ display:block; margin-bottom:6px; font:600 13px/1.4 var(--font-text); color:var(--ink); }
 .q-follow .field{ width:100%; }
+/* téléphone : indicatif du pays + numéro, côte à côte */
+.phone{ display:flex; gap:8px; }
+.phone select.field{ flex:none; width:auto; padding-right:8px; font-weight:600; cursor:pointer; }
+.phone input.field{ flex:1; min-width:0; }
 
 /* options */
 .opts{ display:flex; flex-wrap:wrap; gap:8px; }

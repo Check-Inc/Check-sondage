@@ -6,10 +6,6 @@ export default function Hero() {
           <span className="line">Stoppons le vol</span>
           <span className="line"><span className="outline">c<span className="apos">’</span>est un crime</span><span className="dot" aria-hidden="true" /></span>
         </h1>
-        {/* Le contour de « c'est un crime » est un -webkit-text-stroke de la
-            MÊME couleur que le remplissage (styles.css) : les tracés internes
-            dans N/M/R sont invisibles, et le rendu est le même partout —
-            y compris Safari iOS qui rend mal les filtres SVG url(). */}
         <div className="hero-visual">
           <img
             className="hero-illu"

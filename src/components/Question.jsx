@@ -1,3 +1,5 @@
+import { COUNTRIES } from "../data/countries.js";
+
 const pad = (n) => String(n).padStart(2, "0");
 const SCALE = ["1", "2", "3", "4", "5"];
 
@@ -8,7 +10,7 @@ export function isAnswered(q, value) {
 
 /* Une question : titre numéroté + champ adapté à son type */
 /* `number` / `total` : position parmi les questions affichées (certaines sont conditionnelles) */
-export default function Question({ q, number, total, value, onChange, followUpValue, onFollowUpChange }) {
+export default function Question({ q, number, total, value, onChange, followUpValue, onFollowUpChange, country, onCountryChange }) {
   const id = `q${q.n}`;
   const hintId = q.hint ? `${id}-hint` : undefined;
   const legendId = q.type === "scale" ? `${id}-legend` : undefined;
@@ -89,16 +91,43 @@ export default function Question({ q, number, total, value, onChange, followUpVa
       {q.followUp && value === q.followUp.showIf && (
         <div className="q-follow">
           <label htmlFor={`${id}-follow`}>{q.followUp.label}</label>
-          <input
-            className="field"
-            id={`${id}-follow`}
-            name={q.followUp.name}
-            type={q.followUp.inputType || "text"}
-            placeholder={q.followUp.placeholder}
-            autoComplete={q.followUp.autoComplete}
-            value={followUpValue || ""}
-            onChange={(e) => onFollowUpChange(e.target.value)}
-          />
+          {q.followUp.type === "phone" ? (
+            <div className="phone">
+              <select
+                className="field"
+                aria-label="Indicatif du pays"
+                autoComplete="tel-country-code"
+                value={country}
+                onChange={(e) => onCountryChange(e.target.value)}
+              >
+                {COUNTRIES.map(([code, name, dial]) => (
+                  <option key={code} value={code} title={name}>{code} {dial}</option>
+                ))}
+              </select>
+              <input
+                className="field"
+                id={`${id}-follow`}
+                name={q.followUp.name}
+                type="tel"
+                inputMode="tel"
+                placeholder={q.followUp.placeholder}
+                autoComplete="tel-national"
+                value={followUpValue || ""}
+                onChange={(e) => onFollowUpChange(e.target.value)}
+              />
+            </div>
+          ) : (
+            <input
+              className="field"
+              id={`${id}-follow`}
+              name={q.followUp.name}
+              type={q.followUp.inputType || "text"}
+              placeholder={q.followUp.placeholder}
+              autoComplete={q.followUp.autoComplete}
+              value={followUpValue || ""}
+              onChange={(e) => onFollowUpChange(e.target.value)}
+            />
+          )}
         </div>
       )}
     </fieldset>
