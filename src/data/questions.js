@@ -81,7 +81,7 @@ export const STEPS = [
         name: "share_phone", type: "single",
         label: "Souhaitez-vous nous laisser votre numéro de téléphone ?",
         options: [["yes", "Oui"], ["no", "Non"]],
-        followUp: { name: "phone", showIf: "yes", label: "Votre numéro de téléphone", inputType: "tel", autoComplete: "tel", placeholder: "+225 07 00 00 00 00" },
+        followUp: { name: "contact", showIf: "yes", label: "Votre numéro de téléphone", inputType: "tel", autoComplete: "tel", placeholder: "+225 07 00 00 00 00" },
       },
       // {
       //   name: "contact", type: "short", optional: true, autoComplete: "email", showIf: ["keep_informed", "yes"],

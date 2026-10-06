@@ -6,21 +6,10 @@ export default function Hero() {
           <span className="line">Stoppons le vol</span>
           <span className="line"><span className="outline">c<span className="apos">’</span>est un crime</span><span className="dot" aria-hidden="true" /></span>
         </h1>
-        {/* Contour tracé autour de la forme pleine des lettres : -webkit-text-stroke fait apparaître
-            les tracés qui se croisent à l'intérieur de N, M et R dans Plus Jakarta Sans.
-            Trait centré sur le bord (moitié dehors, moitié dedans), comme un text-stroke.
-            Une épaisseur par palier, suivant la taille du titre (voir styles.css). */}
-        <svg width="0" height="0" aria-hidden="true" focusable="false" style={{ position: "absolute" }}>
-          {[["1", 0.6], ["2", 1], ["3", 1.5], ["4", 2]].map(([id, w]) => (
-            <filter id={`hero-outline-${id}`} key={id}>
-              <feMorphology in="SourceAlpha" operator="dilate" radius={w / 2} result="grown" />
-              <feMorphology in="SourceAlpha" operator="erode" radius={w / 2} result="shrunk" />
-              <feComposite in="grown" in2="shrunk" operator="out" result="ring" />
-              <feFlood floodColor="#FECACA" />
-              <feComposite in2="ring" operator="in" />
-            </filter>
-          ))}
-        </svg>
+        {/* Le contour de « c'est un crime » est un -webkit-text-stroke de la
+            MÊME couleur que le remplissage (styles.css) : les tracés internes
+            dans N/M/R sont invisibles, et le rendu est le même partout —
+            y compris Safari iOS qui rend mal les filtres SVG url(). */}
         <div className="hero-visual">
           <img
             className="hero-illu"
