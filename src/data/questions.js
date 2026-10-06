@@ -8,6 +8,7 @@
    affiché seulement quand la réponse vaut `showIf` ; il est envoyé sous son propre `name`.
    Avec `type: "phone"`, le champ est précédé d'un choix d'indicatif (data/countries.js)
    et la valeur envoyée est « indicatif + numéro ».
+   `channel: true` : le canal WhatsApp (config.js) s'ouvre dans un nouvel onglet à l'envoi du sondage.
 ----------------------------------------------------------------- */
 export const STEPS = [
   {
@@ -78,7 +79,10 @@ export const STEPS = [
         name: "keep_informed", type: "single",
         label: "Enfin, souhaitez-vous être tenu informé des résultats de ce sondage ?",
         options: [["yes", "Oui"], ["no", "Non"]],
-        followUp: { name: "contact", showIf: "yes", type: "phone", label: "Votre numéro de téléphone", placeholder: "XX XX XX XX XX" },
+        followUp: {
+          name: "contact", showIf: "yes", type: "phone", label: "Votre numéro de téléphone", placeholder: "XX XX XX XX XX",
+          channel: true,
+        },
       },
       // {
       //   name: "contact", type: "short", optional: true, autoComplete: "email", showIf: ["keep_informed", "yes"],

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ALL_QUESTIONS } from "../data/questions.js";
 import { dialOf, guessCountry, locateCountry } from "../data/countries.js";
-import { SUBMIT_URL } from "../config.js";
+import { SUBMIT_URL, WHATSAPP_CHANNEL_URL } from "../config.js";
 import Question from "./Question.jsx";
 
 const countryKey = (q) => `${q.followUp.name}_country`;
@@ -45,12 +45,15 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
   const submissionId = useRef(makeId()); // identifiant stable : évite les doublons en cas de double clic
   const titleRef = useRef(null);
   const advanceTimer = useRef(null);
+  const channelOpened = useRef(false);
 
   const questions = ALL_QUESTIONS.filter((q) => isVisible(q, answers));
   const index = Math.min(current, questions.length - 1);
   const q = questions[index];
   const last = index === questions.length - 1;
   const progress = ((index + 1) / questions.length) * 100;
+  // « Oui » à une question qui annonce le canal WhatsApp (followUp.channel dans questions.js)
+  const wantsChannel = questions.some((x) => x.followUp?.channel && answers[x.name] === x.followUp.showIf);
 
   useEffect(() => {
     titleRef.current?.focus({ preventScroll: true });
@@ -85,12 +88,20 @@ export default function SurveyForm({ answers, onAnswer, onSubmitted, toast }) {
     if (sending) return;
     setSending(true);
     const data = buildPayload(submissionId.current, answers, detectedCountry);
+    // Le canal WhatsApp s'ouvre en même temps que l'envoi, dans un nouvel onglet. Il faut l'ouvrir ici,
+    // avant tout `await` : un navigateur bloque une fenêtre ouverte après coup, hors du clic.
+    // Une seule fois : un nouvel essai après un échec d'envoi ne le rouvre pas.
+    if (wantsChannel && !channelOpened.current) {
+      channelOpened.current = true;
+      window.open(WHATSAPP_CHANNEL_URL, "_blank", "noopener");
+    }
     try {
       if (SUBMIT_URL) {
         const r = await fetch(SUBMIT_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json", "Idempotency-Key": data.id },
           body: JSON.stringify(data),
+          keepalive: true, // l'envoi se termine même si WhatsApp passe au premier plan
         });
         // 201 = enregistrée, 200 = déjà enregistrée à l'identique.
         // 409 = cet id est déjà enregistré avec d'autres réponses : un premier envoi est arrivé au serveur
